@@ -50,6 +50,7 @@ build_script:
         $env:SAVE_GCLIENT_SRC="true"
       }
   - gclient sync --with_branch_heads --with_tags --nohooks
+  - ps: regsvr32 /s "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\DIA SDK\bin\amd64\msdia140.dll"
 on_image_bake:
   - ps: >-
       echo "Baking image: $env:APPVEYOR_BAKE_IMAGE at dir $PWD"

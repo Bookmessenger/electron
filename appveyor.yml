@@ -25,7 +25,7 @@
 
 version: 1.0.{build}
 build_cloud: electronhq-16-core
-image: e-107.0.5286.0
+image: e-106.0.5216.0
 environment:
   GIT_CACHE_PATH: C:\Users\appveyor\libcc_cache
   ELECTRON_OUT_DIR: Default
@@ -62,6 +62,11 @@ for:
           }
 
     build_script:
+      - ps: >-
+          if ($env:TARGET_ARCH -eq 'ia32') {
+            # we need to force the arch to ia32 to build on the arch correctly
+            "arch=ia32" | Out-File -FilePath C:\projects\src\electron\.npmrc
+          }
       - ps: |
           node script/yarn.js install --frozen-lockfile
           $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
@@ -222,6 +227,11 @@ for:
             Write-warning "Skipping PR build for branch"; Exit-AppveyorBuild
           }
     build_script:
+      - ps: >-
+          # force .npmrc arch to ia32 to build correctly
+          if ($env:TARGET_ARCH -eq 'ia32') {
+            "arch=ia32" | Out-File -FilePath C:\projects\src\electron\.npmrc
+          }
       - ps: |
           node script/yarn.js install --frozen-lockfile
           $result = node script/doc-only-change.js --prNumber=$env:APPVEYOR_PULL_REQUEST_NUMBER --prBranch=$env:APPVEYOR_REPO_BRANCH
